@@ -8,14 +8,31 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { mockProducts, categories } from "@/data/mockData";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, ChevronDown, ChevronRight } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const Shop = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("featured");
+  const [openCategories, setOpenCategories] = useState<string[]>([]);
+
+  const toggleCategory = (categoryId: string) => {
+    setOpenCategories(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
+  const getSubcategories = (parentId: string) => {
+    return categories.filter(cat => cat.parentId === parentId);
+  };
 
   const filteredProducts = selectedCategories.length > 0
-    ? mockProducts.filter(p => selectedCategories.includes(p.category))
+    ? mockProducts.filter(p => 
+        selectedCategories.includes(p.category) || 
+        selectedCategories.includes(p.subcategory || '')
+      )
     : mockProducts;
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -54,28 +71,125 @@ const Shop = () => {
                 {/* Categories */}
                 <div>
                   <h3 className="font-semibold mb-3">Categories</h3>
-                  <div className="space-y-2">
-                    {categories.filter(cat => !cat.parentId).map((category) => (
-                      <div key={category.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={category.slug}
-                          checked={selectedCategories.includes(category.slug)}
-                          onCheckedChange={(checked) => {
-                            setSelectedCategories(
-                              checked
-                                ? [...selectedCategories, category.slug]
-                                : selectedCategories.filter(c => c !== category.slug)
-                            );
-                          }}
-                        />
-                        <Label
-                          htmlFor={category.slug}
-                          className="text-sm font-normal cursor-pointer"
-                        >
-                          {category.name} ({category.productCount})
-                        </Label>
-                      </div>
-                    ))}
+                  <div className="space-y-1">
+                    {categories.filter(cat => !cat.parentId).map((category) => {
+                      const level2Categories = getSubcategories(category.id);
+                      const hasSubcategories = level2Categories.length > 0;
+                      
+                      return (
+                        <div key={category.id} className="space-y-1">
+                          <div className="flex items-center space-x-2">
+                            {hasSubcategories ? (
+                              <button
+                                onClick={() => toggleCategory(category.id)}
+                                className="p-0 h-4 w-4 flex items-center justify-center"
+                              >
+                                {openCategories.includes(category.id) ? (
+                                  <ChevronDown className="h-3 w-3" />
+                                ) : (
+                                  <ChevronRight className="h-3 w-3" />
+                                )}
+                              </button>
+                            ) : (
+                              <div className="w-4" />
+                            )}
+                            <Checkbox
+                              id={category.slug}
+                              checked={selectedCategories.includes(category.slug)}
+                              onCheckedChange={(checked) => {
+                                setSelectedCategories(
+                                  checked
+                                    ? [...selectedCategories, category.slug]
+                                    : selectedCategories.filter(c => c !== category.slug)
+                                );
+                              }}
+                            />
+                            <Label
+                              htmlFor={category.slug}
+                              className="text-sm font-medium cursor-pointer"
+                            >
+                              {category.name}
+                            </Label>
+                          </div>
+
+                          {/* Level 2 Subcategories */}
+                          {hasSubcategories && openCategories.includes(category.id) && (
+                            <div className="ml-6 space-y-1 mt-1">
+                              {level2Categories.map((subcat) => {
+                                const level3Categories = getSubcategories(subcat.id);
+                                const hasLevel3 = level3Categories.length > 0;
+                                
+                                return (
+                                  <div key={subcat.id} className="space-y-1">
+                                    <div className="flex items-center space-x-2">
+                                      {hasLevel3 ? (
+                                        <button
+                                          onClick={() => toggleCategory(subcat.id)}
+                                          className="p-0 h-4 w-4 flex items-center justify-center"
+                                        >
+                                          {openCategories.includes(subcat.id) ? (
+                                            <ChevronDown className="h-3 w-3" />
+                                          ) : (
+                                            <ChevronRight className="h-3 w-3" />
+                                          )}
+                                        </button>
+                                      ) : (
+                                        <div className="w-4" />
+                                      )}
+                                      <Checkbox
+                                        id={subcat.slug}
+                                        checked={selectedCategories.includes(subcat.slug)}
+                                        onCheckedChange={(checked) => {
+                                          setSelectedCategories(
+                                            checked
+                                              ? [...selectedCategories, subcat.slug]
+                                              : selectedCategories.filter(c => c !== subcat.slug)
+                                          );
+                                        }}
+                                      />
+                                      <Label
+                                        htmlFor={subcat.slug}
+                                        className="text-sm font-normal cursor-pointer"
+                                      >
+                                        {subcat.name}
+                                      </Label>
+                                    </div>
+
+                                    {/* Level 3 Sub-subcategories */}
+                                    {hasLevel3 && openCategories.includes(subcat.id) && (
+                                      <div className="ml-6 space-y-1 mt-1">
+                                        {level3Categories.map((subsubcat) => (
+                                          <div key={subsubcat.id} className="flex items-center space-x-2">
+                                            <div className="w-4" />
+                                            <Checkbox
+                                              id={subsubcat.slug}
+                                              checked={selectedCategories.includes(subsubcat.slug)}
+                                              onCheckedChange={(checked) => {
+                                                setSelectedCategories(
+                                                  checked
+                                                    ? [...selectedCategories, subsubcat.slug]
+                                                    : selectedCategories.filter(c => c !== subsubcat.slug)
+                                                );
+                                              }}
+                                            />
+                                            <Label
+                                              htmlFor={subsubcat.slug}
+                                              className="text-sm font-normal cursor-pointer text-muted-foreground"
+                                            >
+                                              {subsubcat.name}
+                                            </Label>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
