@@ -53,9 +53,9 @@ export const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background border-b border-border">
+    <header className="sticky top-0 z-50 border-b border-border">
       {/* Top bar */}
-      <div className="bg-primary text-primary-foreground">
+      <div className="bg">
         <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between text-xs md:text-sm">
             <div className="flex items-center gap-3 md:gap-6">
@@ -68,11 +68,14 @@ export const Header = () => {
                 <span className="hidden sm:inline">sales@cnfoods.com</span>
               </a>
             </div>
+            <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+            <div className="text-xl md:text-2xl font-bold text-primary">CN Foods</div>
+            </Link>
             <div className="flex items-center gap-2 md:gap-4">
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10" 
+                className="h-8 w-8" 
                 asChild
               >
                 <Link to="/liked">
@@ -80,13 +83,26 @@ export const Header = () => {
                   <span className="sr-only">Favorites</span>
                 </Link>
               </Button>
+              <div className="flex items-center gap-1 md:gap-2">
+              <Button variant="ghost" size="icon" className="relative h-9 w-9 md:h-10 md:w-10" asChild>
+              <Link to="/cart">
+                <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
+                {totalItems > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-4 w-4 md:h-5 md:w-5 flex items-center justify-center p-0 text-[10px] md:text-xs">
+                    {totalItems}
+                  </Badge>
+                )}
+                <span className="sr-only">Cart</span>
+              </Link>
+            </Button>
+          </div>
               {user ? (
                 <div className="flex items-center gap-1 md:gap-2">
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={() => navigate('/profile')}
-                    className="text-primary-foreground hover:bg-primary-foreground/10 h-8 text-xs md:text-sm px-2 md:px-3"
+                    className="h-8 text-xs md:text-sm px-2 md:px-3"
                   >
                     <User className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
                     <span className="hidden md:inline">My Profile</span>
@@ -106,7 +122,7 @@ export const Header = () => {
                   variant="ghost" 
                   size="sm" 
                   onClick={() => navigate('/auth')}
-                  className="text-primary-foreground hover:bg-primary-foreground/10 h-8 text-xs md:text-sm px-2 md:px-3"
+                  className="h-8 text-xs md:text-sm px-2 md:px-3"
                 >
                   <User className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
                   <span className="hidden md:inline">Sign In</span>
@@ -121,9 +137,7 @@ export const Header = () => {
       <div className="container mx-auto px-4 py-3 md:py-4">
         <div className="flex items-center justify-between gap-4 md:gap-8">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="text-xl md:text-2xl font-bold text-primary">CN Foods</div>
-          </Link>
+          
 
           {/* Search */}
           {/* <div className="hidden md:flex flex-1 max-w-2xl">
@@ -138,19 +152,7 @@ export const Header = () => {
           </div> */}
 
           {/* Actions */}
-          <div className="flex items-center gap-1 md:gap-2">
-            <Button variant="ghost" size="icon" className="relative h-9 w-9 md:h-10 md:w-10" asChild>
-              <Link to="/cart">
-                <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
-                {totalItems > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-4 w-4 md:h-5 md:w-5 flex items-center justify-center p-0 text-[10px] md:text-xs">
-                    {totalItems}
-                  </Badge>
-                )}
-                <span className="sr-only">Cart</span>
-              </Link>
-            </Button>
-          </div>
+          
         </div>
 
         {/* Mobile Search */}
@@ -167,38 +169,38 @@ export const Header = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="border-t border-border overflow-x-auto">
+      <nav className="overflow-x-auto">
         <div className="container mx-auto px-4">
           <ul className="flex items-center justify-center gap-1 min-w-max md:min-w-0">
             <li>
-              <Button variant="ghost" className="rounded-none h-10 md:h-12 text-sm whitespace-nowrap" asChild>
+              <Button variant="ghost" className="rounded-sm h-10 md:h-12 text-sm whitespace-nowrap" asChild>
                 <Link to="/">Home</Link>
               </Button>
             </li>
             <li>
-              <Button variant="ghost" className="rounded-none h-10 md:h-12 text-sm whitespace-nowrap" asChild>
+              <Button variant="ghost" className="rounded-sm h-10 md:h-12 text-sm whitespace-nowrap" asChild>
                 <Link to="/shop">Shop</Link>
               </Button>
             </li>
             <li>
-              <Button variant="ghost" className="rounded-none h-10 md:h-12 text-sm whitespace-nowrap" asChild>
+              <Button variant="ghost" className="rounded-sm h-10 md:h-12 text-sm whitespace-nowrap" asChild>
                 <Link to="/fast-order">Fast Order</Link>
               </Button>
             </li>
             {!user && (
               <>
-                <li>
-                  <Button variant="ghost" className="rounded-none h-10 md:h-12 text-sm whitespace-nowrap" asChild>
+                {/* <li>
+                  <Button variant="ghost" className="rounded-sm h-10 md:h-12 text-sm whitespace-nowrap" asChild>
                     <Link to="/auth">Sign In</Link>
                   </Button>
-                </li>
+                </li> */}
                 <li>
-                  <Button variant="ghost" className="rounded-none h-10 md:h-12 text-sm whitespace-nowrap" asChild>
+                  <Button variant="ghost" className="rounded-sm h-10 md:h-12 text-sm whitespace-nowrap" asChild>
                     <Link to="/new-customer-signup">New Customer Signup</Link>
                   </Button>
                 </li>
                 <li>
-                  <Button variant="ghost" className="rounded-none h-10 md:h-12 text-sm whitespace-nowrap" asChild>
+                  <Button variant="ghost" className="rounded-sm h-10 md:h-12 text-sm whitespace-nowrap" asChild>
                     <Link to="/new-supplier-signup">New Supplier Signup</Link>
                   </Button>
                 </li>
@@ -207,7 +209,7 @@ export const Header = () => {
             <li>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="rounded-none h-10 md:h-12 text-sm whitespace-nowrap">
+                  <Button variant="ghost" className="rounded-sm h-10 md:h-12 text-sm whitespace-nowrap">
                     Get in Touch
                     <ChevronDown className="ml-1 h-3 w-3 md:h-4 md:w-4" />
                   </Button>
@@ -224,6 +226,7 @@ export const Header = () => {
             </li>
           </ul>
         </div>
+        <br></br>
       </nav>
     </header>
   );

@@ -111,16 +111,16 @@ const Auth = () => {
       <Header />
       <main className="flex-1 container mx-auto px-4 py-16 flex items-center justify-center">
         <Tabs defaultValue="signin" className="w-full max-w-md">
-          <TabsList className="grid w-full grid-cols-2">
+          {/* <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
-          </TabsList>
+          </TabsList> */}
 
           <TabsContent value="signin">
             <Card>
               <CardHeader>
                 <CardTitle>Sign In</CardTitle>
-                <CardDescription>Enter your credentials to access your account</CardDescription>
+                {/* <CardDescription>Enter your credentials to access your account</CardDescription> */}
               </CardHeader>
               <form onSubmit={signInForm.handleSubmit(onSignIn)}>
                 <CardContent className="space-y-4">
